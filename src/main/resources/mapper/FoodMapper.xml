@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healthyrecipes.mapper.FoodMapper">
+    <update id="setSuggestion">
+        update suggestion
+        <trim prefix="set" suffixOverrides=",">
+            <if test="protein != null and protein != ''">protein=#{protein},</if>
+            <if test="carbohydrate != null and carbohydrate != ''">carbohydrate = #{carbohydrate},</if>
+            <if test="cellulose != null and cellulose != ''">cellulose = #{cellulose},</if>
+            <if test="fat != null and fat != ''" >fat = #{fat},</if>
+            <if test="calories != null and calories != ''">calories = #{calories}</if>
+        </trim>
+        where userid = #{userid}
+    </update>
+    <update id="updateFood">
+        update food
+        <trim prefix="set" suffixOverrides=",">
+            <if test="categoryId != null and categoryId !=''">category_id=#{categoryId},</if>
+            <if test="title != null and title !=''">title= #{title},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="cellulose != null and cellulose != ''">cellulose = #{cellulose},</if>
+            <if test="calories != null and calories != ''">calories = #{calories},</if>
+            <if test="fat != null and fat !=''">fat =#{fat},</if>
+            <if test="carbohydrate != null and carbohydrate !=''">carbohydrate =#{carbohydrate},</if>
+            <if test="protein != null and protein !=''">protein =#{protein}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="getFoodList" resultType="com.healthyrecipes.pojo.entity.Food">
+        select * from food
+        <where>
+            <if test="id != null and id != ''">
+                id = #{id}
+            </if>
+            <if test="category_id !=null and category_id != ''">
+                and category_id = #{category_id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like "%"#{title}"%"
+            </if>
+        </where>
+    </select>
+    <select id="getCategoryList" resultType="com.healthyrecipes.pojo.entity.Category">
+        select * from category
+        <where>
+            <if test="id != null and id != ''">
+                id =#{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title=#{title}
+            </if>
+        </where>
+    </select>
+    <select id="getFoodListByIds" resultType="com.healthyrecipes.pojo.entity.Food">
+        select * from food
+        <where>
+            id in
+            <foreach collection="ids" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+    <select id="getRandomFoods" resultType="com.healthyrecipes.pojo.vo.Suggestion">
+        select id,title from food
+        <where >
+            id in
+            <foreach collection="nums" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+    <select id="getSuggestion" resultType="com.healthyrecipes.pojo.vo.FoodVO">
+        select * from suggestion
+        <where>
+            <if test="userid != null and userid != ''">
+                userid =#{userid}
+            </if>
+        </where>
+    </select>
+    <select id="getMessage" resultType="com.healthyrecipes.pojo.dto.MessageDTO">
+        select id,title,image from food
+        <where>
+            id in
+            <foreach collection="ids" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+    <select id="getCanSave" resultType="com.healthyrecipes.pojo.entity.Save">
+        select id from save
+        <where>
+            <if test="userid != null and userid != ''">
+                userid = #{userid}
+            </if>
+            <if test="foodId != null and foodId !=''">
+                and food_id = #{foodId}
+            </if>
+            <if test="type != null and type !=''">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
+</mapper>

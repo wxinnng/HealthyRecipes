@@ -1,0 +1,89 @@
+server:
+  port: 8080
+  host: 123.57.175.4
+
+mybatis:
+
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.healthyrecipes.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://${server.host}/healthyrecipes?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: healthyrecipes
+      password: 48N6bEnph8TarSMM
+      max-wait: 3000
+
+  mail:
+    host: smtp.163.com
+    username: 19846811030@163.com
+    password: SWSERLCPKUGVTZDB
+    default-encoding: utf-8
+    port: 465
+    protocol: smtp
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          starttls:
+            enable: true
+            required: true
+
+  redis:
+    port: 6379        #redis端口
+    host: ${server.host}   #主机ip
+    database: 0       #默认数据库
+    timeout: 1800000  #连接超时时间
+    password: wangxing #Redis数据库密码
+    lettuce:
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: -1  #最大等待时间
+        max-idle: 5
+        min-idle: 0
+logging:
+  level:
+    com:
+      healthyrecipes:
+        mapper: debug
+        service: info
+        controller: info
+
+
+# 自定义配置
+project:
+  jwt:
+    secret-key: secret
+    ttl: 2592000000
+    token-name: token
+
+  alioss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5t7AjABT97keTzQkNtyP
+    access-key-secret: KVzCRkdADCoINhLkNsnUyk8EmkKvZ6
+    bucket-name: healthy-bucket
+  bailian:
+    ak: LTAI5tHvA7yEtg6Tn4VurnAs
+    sk: criOqwvkmplHpoRucPASoQQvOpyOit
+    app-id:  b068c17e55d44c97bbc00d594e1dad07
+    agent_id: 002db9335fd94b1793d15653d9f7dc0b_p_efm
+  baidu:
+    app-id : 48298377
+    ak : 4jl2mGGFLmkLeDP76eyrNYZr
+    sk : cO6T4ASjRtrmyuRaxhjWukqDhIFjpcVS
