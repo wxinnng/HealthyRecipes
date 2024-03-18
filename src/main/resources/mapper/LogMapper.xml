@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.healthyrecipes.mapper.LogMapper">
+
+    <select id="queryLogByPage" resultType="com.healthyrecipes.pojo.entity.LogContent">
+        select * from log
+        <where>
+            <if test= "id != null and id != ''">
+                id = #{id}
+            </if>
+            <if test= "userid != null and userid != ''">
+                and userid = #{userid}
+            </if>
+            <if test= "topicId != null and topicId != ''">
+                and topic_id = #{topicId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTopicList" resultType="com.healthyrecipes.pojo.entity.Topic">
+        select * from topic
+        where
+        <if test= "id != null and id != ''">
+            id = #{id} and
+        </if>
+        <if test= "desc != null and desc != ''">
+            `desc` = #{desc} and
+        </if>
+        status = 1
+    </select>
+
+</mapper>
