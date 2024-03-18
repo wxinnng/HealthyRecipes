@@ -1,15 +1,20 @@
 package com.healthyrecipes.service.Impl;
 
+import com.github.pagehelper.PageHelper;
 import com.healthyrecipes.common.utils.AliOssUtil;
 import com.healthyrecipes.exception.BusinessException;
+import com.healthyrecipes.mapper.LogMapper;
+import com.healthyrecipes.pojo.entity.LogContent;
+import com.healthyrecipes.pojo.entity.Topic;
+import com.healthyrecipes.pojo.query.LogQuery;
 import com.healthyrecipes.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
-
 /**
  * @Author:86198
  * @DATE:2024/3/17 18:27
@@ -22,6 +27,19 @@ public class LogServiceImpl implements LogService {
 
     @Autowired
     private AliOssUtil aliOssUtil;  //阿里云OOS
+
+
+    @Autowired
+    private LogMapper logMapper;
+
+    @Override
+    public List<LogContent> getLogList(LogQuery logQuery) {
+        // 分页查询设置
+        PageHelper.startPage(logQuery.getPageNum(), logQuery.getPageSize());
+        // 查询并返回数据
+        return logMapper.queryLogByPage(logQuery);
+    }
+
 
     @Override
     public void upImages(MultipartFile[] images, Integer userid) {
@@ -55,5 +73,10 @@ public class LogServiceImpl implements LogService {
             加一个判断，如果不为null，就不更新，如果不清楚的话，就看看别的xml文件中update方法怎么写的。
         */
 
+    }
+
+    @Override
+    public List<Topic> getTopicList(Topic topic) {
+        return logMapper.getTopicList(topic);
     }
 }
