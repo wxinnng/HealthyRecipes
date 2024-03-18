@@ -101,33 +101,12 @@ public class CommonController {
                 redisUtil.incrby(key,1L);
             else
                 redisUtil.set(key,1);
-            /*问题封装 */
-            ArrayList<ChatRequestMessage> message = new ArrayList<>();
-            message.add(new ChatSystemMessage("你是一个营养健康师，帮助回答各类关于饮食健康的问题"));
-            message.add(new ChatUserMessage(askContent.getQuestion()));
+            String result = userService.sendMessageToXingHuo(askContent.getQuestion());
+            return ResultJson.success(result);
 
-            //请求对象
-            CompletionsRequest request = new CompletionsRequest().setAppId(properties.getApp_id())
-                    .setMessages(message)
-                    .setParameters(new CompletionsRequest.Parameter().setResultFormat("message"));
-
-            CompletionsResponse response = client.completions(request);
-
-            if(!response.isSuccess()){
-                System.out.printf("failed to create completion, requestId: %s, code: %s, message: %s\n",
-                        response.getRequestId(), response.getCode(), response.getMessage());
-                throw new AIUseFailException("AI使用错误！");
-            }
-
-            //调用成功，返回结果。
-            return ResultJson.success(response.getData().getChoices().get(0).getMessage().getContent());
-
-        }catch (AIUseFailException e){
+        }catch (Exception e){
             System.err.println(e.getLocalizedMessage() + e.getMessage());
             return ResultJson.error("AI机器人出了点错误，请稍后再试 ~");
-        } catch (Exception e){
-            System.err.println(e.getLocalizedMessage() + e.getMessage());
-            return ResultJson.error("服务器异常!");
         }
     }
 }

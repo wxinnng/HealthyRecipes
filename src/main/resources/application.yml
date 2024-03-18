@@ -87,3 +87,9 @@ project:
     app-id : 48298377
     ak : 4jl2mGGFLmkLeDP76eyrNYZr
     sk : cO6T4ASjRtrmyuRaxhjWukqDhIFjpcVS
+# 讯飞星火配置
+xunfei:
+  client:
+    appid: eb1e3c7a
+    apiSecret: NWY0MWUxOTBiZWRmYmNlNGQ4MmFlNzQw
+    apiKey: 333fe5b7e1de7c7f2f8fe01ca362b8c4

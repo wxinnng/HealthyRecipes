@@ -10,6 +10,11 @@ import com.healthyrecipes.pojo.dto.UserDTO;
 import com.healthyrecipes.pojo.entity.*;
 import com.healthyrecipes.pojo.vo.CommentVO;
 import com.healthyrecipes.service.UserService;
+import io.github.briqt.spark4j.SparkClient;
+import io.github.briqt.spark4j.constant.SparkApiVersion;
+import io.github.briqt.spark4j.model.SparkMessage;
+import io.github.briqt.spark4j.model.SparkSyncChatResponse;
+import io.github.briqt.spark4j.model.request.SparkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Resource
+    private SparkClient sparkClient;
 
     @Autowired
     private AdminMapper adminMapper;
@@ -181,6 +189,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserMessageByEmail(String email) {
         return userMapper.getUserByEmail(email,null);
+    }
+
+    @Override
+    public String sendMessageToXingHuo(String question) {
+        List<SparkMessage> messages = new ArrayList<>();   //消息列表
+        messages.add(SparkMessage.systemContent(MessageConstant.PRECONDITION));  //预设问题
+        messages.add(SparkMessage.userContent(question));  //设置问题
+
+        //发送信息
+        SparkRequest sparkRequest = SparkRequest.builder()
+                .messages(messages)
+                .maxTokens(1024)  //回答的最大token
+                .temperature(0.2) //结果随机性
+                .apiVersion(SparkApiVersion.V3_5)
+                .build(); //
+
+        //通步调用
+        SparkSyncChatResponse sparkSyncChatResponse = sparkClient.chatSync(sparkRequest);
+        return sparkSyncChatResponse.getContent();
     }
 
     @Override

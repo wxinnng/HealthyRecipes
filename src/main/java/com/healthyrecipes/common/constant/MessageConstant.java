@@ -33,9 +33,10 @@ public interface MessageConstant {
 
     Float[] TROPHIC_FACTOR = new Float[]{0.42f,0.30f,0.28f};  //car protein cell
 
+    String PRECONDITION = "你是一个营养健康师，帮助回答各类关于饮食健康的问题";
 
     String COMMENT_KEY = "comment";                  //评论
     String USER_COMMENT_KEY = "user_comment" ;            //用户评论key
 
-
+    String REDIS_EMAIL_KEY = "email:";   //邮箱验证码在Redis中的key
 }

@@ -11,7 +11,7 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
-    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" useGeneratedKeys="true" >
         insert into user (username,password,email) values (#{username},#{password},#{email})
     </insert>
 

@@ -126,4 +126,11 @@ public interface UserService {
      * @return: com.healthyrecipes.pojo.entity.User
      */
     User getUserMessageByEmail(String email);
+
+    /**
+     * @description: 朝XingHuo发送信息
+     * @param: [java.lang.String]
+     * @return: java.lang.String
+     */
+    String sendMessageToXingHuo(String question);
 }

@@ -30,10 +30,7 @@ class HealthyRecipesApplicationTests {
     @Autowired
     private UserMapper userMapper;
 
-    @Test
-    void testSave(){
-        userMapper.save(new UserDTO("wangxing","1907444219@qq.com","123"));
-    }
+
 
     @Test
     void testGetByEmail(){

@@ -143,7 +143,7 @@ public class UserController {
         message.setText("邮箱验证码为: " + code +" ,请勿发送给他人,两分钟内有效！");
         try {
             mailSender.send(message);                                      //发送邮箱
-            redisUtil.setex(email+":code",code,120);            //保存到Redis中
+            redisUtil.setex(MessageConstant.REDIS_EMAIL_KEY,code,120);            //保存到Redis中
             log.info("验证码邮件已发送。");
             return ResultJson.success("发送成功");                             //
         } catch (Exception e) {
@@ -165,7 +165,7 @@ public class UserController {
 
         log.info("用户注册：{}", userVO);
         //从redis中获得code
-        String code = (String) redisUtil.get(userVO.getEmail()+":code");
+        String code = (String) redisUtil.get(MessageConstant.REDIS_EMAIL_KEY + userVO.getEmail());
 
         if(code == null){
             return ResultJson.error("验证错误，请稍后再试！");
@@ -179,7 +179,7 @@ public class UserController {
         log.info("注册: 用户提交的密码（加密后） {}",password);
 
         //封装信息
-        UserDTO registerDTO = new UserDTO(userVO.getUsername(), userVO.getEmail(), password);
+        UserDTO registerDTO = new UserDTO(null,userVO.getUsername(), userVO.getEmail(), password);
 
         //Service层处理
         Integer newUserId = userService.register(registerDTO);
@@ -329,6 +329,8 @@ public class UserController {
         userService.doLike(userid,commentId);
         return ResultJson.success("操作成功！");
     }
+
+
     /**
      * 找回密码时，点击获取验证码
      * @param email
@@ -344,7 +346,7 @@ public class UserController {
         User user = userService.getUserMessageByEmail(email);
 
         //从redis中获得正确的code
-        String right = (String) redisUtil.get(email+":code");
+        String right = (String) redisUtil.get(MessageConstant.REDIS_EMAIL_KEY + email);
 
         //比对验证码
         if(code == null){
