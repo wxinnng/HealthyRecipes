@@ -10,5 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface LogService {
 
-    void upImages(MultipartFile[] images,Integer userid) ;
+    List<LogContent> getLogList(LogQuery logQuery);
+
+    void upImages(MultipartFile[] images, Integer userid) ;
+
+    List<Topic> getTopicList(Topic topic);
 }
