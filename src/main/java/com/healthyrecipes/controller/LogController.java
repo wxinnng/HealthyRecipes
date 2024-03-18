@@ -80,22 +80,23 @@ public class LogController extends ABaseController {
         log.info("获得饮食圈的内容:{}",logQuery);
 
         try{
-            //TODO: *3*  从数据库中，查询Log内容,查询的条件是logQuery中不为空的内容
-            //TODO:注意使用分页查询,使用的是PageHelper，可以看看获得Dish中/dish/getdishes是怎么做的，是在不明白就先做
+            return ResultJson.success(logService.getLogList(logQuery));
         }catch(Exception e){
             log.error("{}",e.getMessage());
+            return ResultJson.error("服务器异常");
         }
-        return null;
     }
 
     @PostMapping("/topics")
     public ResultJson<List<Topic>> getTopicList(@RequestBody Topic topic){
 
-        /*TODO:   *4*  通过topic里的信息获得Topic的列表，Service在LogService中写就行，Mapper在LogMapper中写
-        * TODO:数据库中的表的名字是topic
-        * */
-
-        return null;
+        log.info("获得Topic列表:{}", topic);
+        try{
+            return ResultJson.success(logService.getTopicList(topic));
+        }catch (Exception e){
+            log.error("{}",e.getMessage());
+            return ResultJson.error("服务器异常");
+        }
     }
 
 }
