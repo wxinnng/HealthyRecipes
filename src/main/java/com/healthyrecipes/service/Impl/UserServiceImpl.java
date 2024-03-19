@@ -56,7 +56,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)   //开启事务注解
     public Integer register(UserDTO registerDTO) {
-        return userMapper.save(registerDTO);              //保存用户基本信息
+        userMapper.save(registerDTO);              //保存用户基本信息
+        return registerDTO.getId();
     }
 
     @Override

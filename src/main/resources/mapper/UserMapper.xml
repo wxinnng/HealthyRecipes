@@ -11,8 +11,11 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
-    <insert id="save" useGeneratedKeys="true" >
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into user (username,password,email) values (#{username},#{password},#{email})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <!--动态查询用户信息-->

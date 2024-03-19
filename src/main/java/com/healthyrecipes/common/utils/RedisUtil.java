@@ -297,6 +297,14 @@ public class  RedisUtil {
         redisTemplate.opsForList().leftPushAll(key,value);
     }
 
+    public Object lget(String key,int index){
+        return redisTemplate.opsForList().index(key,index);
+    }
+
+    public void lset(String key,int index,Object value){
+        redisTemplate.opsForList().set(key,index,value);
+    }
+
     public void rpushall(String key,Object[] value){
         redisTemplate.opsForList().rightPushAll(key,value);
     }
@@ -336,5 +344,6 @@ public class  RedisUtil {
     public Set<Object> smembers(String key){
          return redisTemplate.opsForSet().members(key);
     }
+
 
 }

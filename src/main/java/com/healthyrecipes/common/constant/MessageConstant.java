@@ -39,4 +39,8 @@ public interface MessageConstant {
     String USER_COMMENT_KEY = "user_comment" ;            //用户评论key
 
     String REDIS_EMAIL_KEY = "email:";   //邮箱验证码在Redis中的key
+
+    String REDIS_LOG_KEY = "log:"; //log:userid:      0:总   1:饮食记录   2:吃多了 (type: list)
+
+    String REDIS_CLOCK_IN_KEY = "clock:";  // clock:G_id:U_id:  (type: bitmap)
 }

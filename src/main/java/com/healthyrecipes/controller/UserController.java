@@ -5,7 +5,6 @@ import com.healthyrecipes.common.properties.JwtProperties;
 import com.healthyrecipes.common.result.ResultJson;
 import com.healthyrecipes.exception.NoSuchCommentException;
 import com.healthyrecipes.pojo.dto.UserDTO;
-import com.healthyrecipes.pojo.entity.CalorieResult;
 import com.healthyrecipes.pojo.entity.Comment;
 import com.healthyrecipes.pojo.entity.User;
 import com.healthyrecipes.common.utils.JwtUtil;
@@ -13,13 +12,9 @@ import com.healthyrecipes.common.utils.RedisUtil;
 import com.healthyrecipes.pojo.vo.*;
 import com.healthyrecipes.service.FoodService;
 import com.healthyrecipes.service.UserService;
-import com.mysql.jdbc.Constants;
-import com.mysql.jdbc.util.ResultSetUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.message.ReusableMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,8 +22,6 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -183,6 +176,11 @@ public class UserController {
 
         //Service层处理
         Integer newUserId = userService.register(registerDTO);
+
+        //添加用户Redis中饮食圈相关的key
+        Integer[] logElements = new Integer[3];
+        Arrays.fill(logElements,0);
+        redisUtil.lpushall(MessageConstant.REDIS_LOG_KEY + newUserId, logElements);
 
         //注册的用户数++
         redisUtil.incrby("msg:registerNum",1L);

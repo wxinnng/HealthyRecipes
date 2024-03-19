@@ -22,4 +22,6 @@ public interface LogService {
     List<Topic> getTopicList(Topic topic);
 
     Integer insertALog(LogContent logContent);
+
+    List<Object> getRecords(Integer userid);
 }
