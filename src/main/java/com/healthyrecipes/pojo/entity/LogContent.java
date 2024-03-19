@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LogContent implements Serializable {
-    private Integer id;
-    private Integer userId;
+    private Integer id;  //id不用插入，自动生成
+    private Integer userid;
     private Integer topicId;
     private String content;
     private Integer likeNum;

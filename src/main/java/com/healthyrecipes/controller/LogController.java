@@ -40,19 +40,14 @@ public class LogController extends ABaseController {
      * @return: com.healthyrecipes.common.result.ResultJson<java.lang.String>
      */
     @PostMapping("/uplog")
-    @ApiOperation("insert-log-text")
-    public ResultJson<String> upLogText(@RequestBody LogContent logContent) {
+    @ApiOperation("上传log")
+    public ResultJson<Object> upLogText(@RequestBody LogContent logContent) {
         log.info("上传log中文本内容 {}", logContent);
-
         try{
-            //TODO: *1*  把LogContent中不为空的内容，更新到数据库中。
-            String content = logContent.getContent();
-            Integer id = logContent.getId();
-            logService.update(id,content);
-            return ResultJson.success("评论添加成功");
+            return ResultJson.success(logService.insertALog(logContent));
         }catch(Exception e){
             log.error("{}",e.getMessage());
-            return ResultJson.error("评论添加失败");
+            return ResultJson.error(null);
         }
     }
 
@@ -61,11 +56,12 @@ public class LogController extends ABaseController {
      * @param: [org.springframework.web.multipart.MultipartFile, java.lang.Integer]
      * @return: com.healthyrecipes.common.result.ResultJson<java.lang.String>
      */
-    @PostMapping("/upimg/{userid}")
-    public ResultJson<String> upLogImage(@RequestBody MultipartFile[] images, @PathVariable Integer userid) {
-        log.info("上传图片 {}", userid);
+    @PostMapping("/upimg/{id}")
+    @ApiOperation("更新图片")
+    public ResultJson<String> upLogImage(@RequestBody MultipartFile[] images, @PathVariable Integer id) {
+        log.info("上传图片 {}", id);
         try {
-            logService.upImages(images,userid);
+            logService.upImages(images,id);
             return ResultJson.success("图片上传成功！");
         } catch (BusinessException e) {
             log.error("阿里云OOS上传图片失败");

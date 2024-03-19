@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.healthyrecipes.mapper.LogMapper">
+    <insert id="insertALog" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
+        insert into log
+        (userid,topic_id,content,date)
+        values
+        (#{userid},#{topicId},#{content},#{date})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateLog">
+        update log
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userid != null">userid=#{userid},</if>
+            <if test="topic != null">topic_id = #{topicId},</if>
+            <if test="content != null and content !=''">content = #{content},</if>
+            <if test="likeNum != null ">like_num = #{likeNum},</if>
+            <if test="disLikeNum != null">dis_like_num = #{disLikeNum},</if>
+            <if test="images != null and images != ''">images = #{images}</if>
+        </trim>
+        where id = #{id}
+    </update>
 
     <select id="queryLogByPage" resultType="com.healthyrecipes.pojo.entity.LogContent">
         select * from log
@@ -28,11 +49,5 @@
         </if>
         status = 1
     </select>
-    <select id="update" resultType="com.healthyrecipes.pojo.entity.LogContent">
-        update log
-        <if test="logContent != null and logContent != ''">
-            logContent = #{content},
-        </if>
-            where id = #{id}
-    </select>
+
 </mapper>

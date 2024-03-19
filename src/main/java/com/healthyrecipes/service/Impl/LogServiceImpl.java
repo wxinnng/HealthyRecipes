@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 /**
@@ -66,21 +68,22 @@ public class LogServiceImpl implements LogService {
             }
 
             imageBuilder.append(objectName).append("\n");
+
+            LogContent logContent = new LogContent();
+            logContent.setImages(Arrays.toString(images));
+            logContent.setUserid(userid);
+
+            //放入到数据库。
+            logMapper.updateLog(logContent);
         }
 
     }
     @Override
-        public Boolean update(Integer id, String content) throws Exception {
-            try {
-                if (id == null || content == null) {
-                    return logMapper.update(id, content);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new Exception("评论添加失败");
-            }
-            return false;
-        }
+    public Integer insertALog(LogContent logContent){
+        logContent.setDate(LocalDateTime.now());
+        logMapper.insertALog(logContent);
+        return logContent.getId();
+    }
 
     @Override
     public List<Topic> getTopicList(Topic topic) {

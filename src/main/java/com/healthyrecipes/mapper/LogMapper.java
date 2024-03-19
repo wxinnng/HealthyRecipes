@@ -27,4 +27,18 @@ public interface LogMapper {
      * @return java.util.List<com.healthyrecipes.pojo.entity.topic>
      */
     List<Topic> getTopicList(Topic topic);
+
+    /**
+     * @description: 插入一个Log
+     * @param: [com.healthyrecipes.pojo.entity.LogContent]
+     * @return: void
+     */
+    void insertALog(LogContent logContent);
+
+    /**
+     * @description: 更新log信息
+     * @param: [com.healthyrecipes.pojo.query.LogQuery]
+     * @return: void
+     */
+    void updateLog(LogContent logContent);
 }

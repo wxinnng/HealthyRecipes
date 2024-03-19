@@ -21,6 +21,5 @@ public interface LogService {
 
     List<Topic> getTopicList(Topic topic);
 
-    
-    Boolean update(Integer id, String content);
+    Integer insertALog(LogContent logContent);
 }
