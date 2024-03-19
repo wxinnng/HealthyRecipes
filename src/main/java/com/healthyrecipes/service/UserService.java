@@ -10,6 +10,7 @@ import com.healthyrecipes.pojo.vo.CalorieVO;
 import com.healthyrecipes.pojo.vo.CommentVO;
 import io.swagger.models.auth.In;
 
+import javax.websocket.Session;
 import java.util.List;
 
 /**
@@ -132,5 +133,5 @@ public interface UserService {
      * @param: [java.lang.String]
      * @return: java.lang.String
      */
-    String sendMessageToXingHuo(String question);
+    void sendMessageToXingHuo(String question, Session userSession);
 }

@@ -1,6 +1,7 @@
 package com.healthyrecipes.config;
 
 import com.healthyrecipes.interceptor.JwtTokenInterceptor;
+import com.healthyrecipes.websocket.SparkConsoleListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,15 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     private JwtTokenInterceptor jwtTokenInterceptor;
 
 
-
+    /**
+     * @description:
+     * @param: []
+     * @return: com.healthyrecipes.websocket.SparkConsoleListener
+     */
+    @Bean
+    public SparkConsoleListener getSparkConsoleListener(){
+        return new SparkConsoleListener();
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -59,6 +68,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         path.add("/user/register");
         path.add("/admin/login");
         path.add("/admin/modifyimg/**");
+        path.add("/ws/**");
+        path.add("/common/**");
         registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/user/**")
                 .addPathPatterns("/common/**")

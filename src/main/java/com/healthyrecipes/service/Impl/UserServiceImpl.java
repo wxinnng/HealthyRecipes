@@ -10,16 +10,17 @@ import com.healthyrecipes.pojo.dto.UserDTO;
 import com.healthyrecipes.pojo.entity.*;
 import com.healthyrecipes.pojo.vo.CommentVO;
 import com.healthyrecipes.service.UserService;
+import com.healthyrecipes.websocket.SparkConsoleListener;
 import io.github.briqt.spark4j.SparkClient;
 import io.github.briqt.spark4j.constant.SparkApiVersion;
 import io.github.briqt.spark4j.model.SparkMessage;
-import io.github.briqt.spark4j.model.SparkSyncChatResponse;
 import io.github.briqt.spark4j.model.request.SparkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.websocket.Session;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Resource
+    private SparkConsoleListener sparkConsoleListener;
 
     @Resource
     private SparkClient sparkClient;
@@ -111,7 +115,7 @@ public class UserServiceImpl implements UserService {
         CommentVO father = userMapper.getFatherCommentById(id);
 
         //用户所有的点赞评论集合
-        Set<Integer> idsComment = (Set)redisUtil.smembers(MessageConstant.USER_COMMENT_KEY + ":" + userid);
+        Set idsComment = (Set)redisUtil.smembers(MessageConstant.USER_COMMENT_KEY + ":" + userid);
 
         //如果当前评论在集合中，就设置成true
         father.setIsLike(idsComment.contains(id));
@@ -192,7 +196,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String sendMessageToXingHuo(String question) {
+    public void sendMessageToXingHuo(String question, Session session) {
+
         List<SparkMessage> messages = new ArrayList<>();   //消息列表
         messages.add(SparkMessage.systemContent(MessageConstant.PRECONDITION));  //预设问题
         messages.add(SparkMessage.userContent(question));  //设置问题
@@ -200,14 +205,16 @@ public class UserServiceImpl implements UserService {
         //发送信息
         SparkRequest sparkRequest = SparkRequest.builder()
                 .messages(messages)
-                .maxTokens(1024)  //回答的最大token
-                .temperature(0.2) //结果随机性
-                .apiVersion(SparkApiVersion.V3_5)
-                .build(); //
+                .maxTokens(1024)     //回答的最大token
+                .temperature(0.5)    //结果随机性
+                .apiVersion(SparkApiVersion.V3_5)   //版本情况
+                .build();   //构建
 
-        //通步调用
-        SparkSyncChatResponse sparkSyncChatResponse = sparkClient.chatSync(sparkRequest);
-        return sparkSyncChatResponse.getContent();
+        //重新设置一个session(返回客户端)
+        sparkConsoleListener.setSession(session);
+
+        //封装聊天信息
+        sparkClient.chatStream(sparkRequest,sparkConsoleListener);
     }
 
     @Override

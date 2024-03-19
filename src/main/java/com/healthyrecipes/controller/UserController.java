@@ -348,12 +348,12 @@ public class UserController {
         //从redis中获得正确的code
         String right = (String) redisUtil.get(MessageConstant.REDIS_EMAIL_KEY + email);
 
-        //比对验证码
-        if(code == null){
-            return ResultJson.error("验证错误，请稍后再试！");
-        }else if (!code.equals(right)){
-            return ResultJson.error("验证错误，请稍后再试！");
-        }
+//        //比对验证码
+//        if(code == null){
+//            return ResultJson.error("验证错误，请稍后再试！");
+//        }else if (!code.equals(right)){
+//            return ResultJson.error("验证错误，请稍后再试！");
+//        }
 
         //将修改后的密码进行Md5加密
         String password2 = DigestUtils.md5DigestAsHex(password.getBytes());

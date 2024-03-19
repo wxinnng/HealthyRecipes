@@ -14,6 +14,7 @@ import com.healthyrecipes.pojo.entity.User;
 
 import com.healthyrecipes.service.FoodService;
 import com.healthyrecipes.service.UserService;
+import com.healthyrecipes.websocket.WebSocketServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,8 @@ public class CommonController {
     @Autowired
     private UserService userService;
 
-
+    @Resource
+    private WebSocketServer webSocketServer;
 
     /**
      * 文件上传
@@ -101,8 +103,11 @@ public class CommonController {
                 redisUtil.incrby(key,1L);
             else
                 redisUtil.set(key,1);
-            String result = userService.sendMessageToXingHuo(askContent.getQuestion());
-            return ResultJson.success(result);
+
+            //调用service层的方法
+            userService.sendMessageToXingHuo(askContent.getQuestion(),webSocketServer.getSessionByUserId(askContent.getUserid()));
+
+            return ResultJson.success(null);
 
         }catch (Exception e){
             System.err.println(e.getLocalizedMessage() + e.getMessage());
