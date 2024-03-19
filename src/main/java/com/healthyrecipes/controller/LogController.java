@@ -46,12 +46,14 @@ public class LogController extends ABaseController {
 
         try{
             //TODO: *1*  把LogContent中不为空的内容，更新到数据库中。
-
+            String content = logContent.getContent();
+            Integer id = logContent.getId();
+            logService.update(id,content);
+            return ResultJson.success("评论添加成功");
         }catch(Exception e){
             log.error("{}",e.getMessage());
+            return ResultJson.error("评论添加失败");
         }
-
-        return null;
     }
 
     /**
