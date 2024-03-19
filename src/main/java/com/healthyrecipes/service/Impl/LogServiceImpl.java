@@ -68,12 +68,19 @@ public class LogServiceImpl implements LogService {
             imageBuilder.append(objectName).append("\n");
         }
 
-        /*
-            TODO: *2* 在LogMapper中创建一个新的Update方法，更新Log表,最好可以对Log表中的所有的字段都能更新
-            加一个判断，如果不为null，就不更新，如果不清楚的话，就看看别的xml文件中update方法怎么写的。
-        */
-
     }
+    @Override
+        public Boolean update(Integer id, String content) throws Exception {
+            try {
+                if (id == null || content == null) {
+                    return logMapper.update(id, content);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new Exception("评论添加失败");
+            }
+            return false;
+        }
 
     @Override
     public List<Topic> getTopicList(Topic topic) {
