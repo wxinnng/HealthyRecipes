@@ -28,5 +28,11 @@
         </if>
         status = 1
     </select>
-
+    <select id="update" resultType="com.healthyrecipes.pojo.entity.LogContent">
+        update log
+        <if test="logContent != null and logContent != ''">
+            logContent = #{content},
+        </if>
+            where id = #{id}
+    </select>
 </mapper>
