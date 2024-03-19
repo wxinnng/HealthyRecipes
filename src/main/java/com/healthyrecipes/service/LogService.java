@@ -20,4 +20,7 @@ public interface LogService {
     void upImages(MultipartFile[] images, Integer userid) ;
 
     List<Topic> getTopicList(Topic topic);
+
+    
+    Boolean update(Integer id, String content);
 }
