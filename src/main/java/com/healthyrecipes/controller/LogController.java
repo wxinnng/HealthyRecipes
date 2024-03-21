@@ -6,6 +6,7 @@ import com.healthyrecipes.exception.BusinessException;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
 import com.healthyrecipes.pojo.query.LogQuery;
+import com.healthyrecipes.pojo.vo.LogUserVO;
 import com.healthyrecipes.service.LogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +50,7 @@ public class LogController extends ABaseController {
             return ResultJson.success(logId);
         }catch(Exception e){
             log.error("{}",e.getMessage());
-            return ResultJson.error(null);
+            return ResultJson.error("服务器异常!");
         }
     }
 
@@ -61,15 +62,15 @@ public class LogController extends ABaseController {
     @PostMapping("/upimg/{id}")
     @ApiOperation("更新图片")
     public ResultJson<String> upLogImage(@RequestBody MultipartFile[] images, @PathVariable Integer id) {
-        log.info("上传图片 {}", id);
+        log.info("上传图片 {} {}", id,images);
         try {
             logService.upImages(images,id);
             return ResultJson.success("图片上传成功！");
         } catch (BusinessException e) {
-            log.error("阿里云OOS上传图片失败");
+            log.error(e.getMessage());
             return ResultJson.error("图片上传失败！");
         } catch (Exception e) {
-            log.error("服务器异常！");
+            log.error(e.getMessage());
             return ResultJson.error("服务器异常！");
         }
     }
@@ -81,9 +82,8 @@ public class LogController extends ABaseController {
      */
     @PostMapping("/getlist")
     @ApiOperation("获得所有的Log列表")
-    public ResultJson<List<LogContent>> getLogList(@RequestBody LogQuery logQuery){
+    public ResultJson<List<LogUserVO>> getLogList(@RequestBody LogQuery logQuery){
         log.info("获得饮食圈的内容:{}",logQuery);
-
         try{
             return ResultJson.success(logService.getLogList(logQuery));
         }catch(Exception e){

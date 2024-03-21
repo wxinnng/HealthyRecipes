@@ -90,7 +90,7 @@
     <!--获得Dish下面父级评论-->
     <select id="getFatherCommentListByDishId" resultType="com.healthyrecipes.pojo.dto.CommentDTO">
         SELECT
-        c.id id,c.user_id userid,u.username username,u.avatar avatar,c.content content,c.date date
+        c.id id,c.user_id userid,u.username username,u.avatar avatar,c.like_num,c.content content,c.date date
         from comment c,user u
         WHERE dish_id = #{id} and parent_id = 0 and c.user_id = u.id
     </select>

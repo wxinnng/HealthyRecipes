@@ -89,8 +89,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     /**
      * @description: 获得当前到午夜12点的秒数
      * @param: []
@@ -220,7 +218,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void doLike(Integer userId,Integer commentId) {
-
         if(redisUtil.sismember(MessageConstant.COMMENT_KEY+":"+commentId,userId)){
             //redis中存在，就直接删除
             redisUtil.srem(MessageConstant.COMMENT_KEY+":"+commentId,userId);
@@ -233,7 +230,6 @@ public class UserServiceImpl implements UserService {
             redisUtil.sadd(MessageConstant.USER_COMMENT_KEY+":"+userId,commentId);
             userMapper.operateForLike(commentId,1);  //1是加操作
         }
-
     }
 
     @Override

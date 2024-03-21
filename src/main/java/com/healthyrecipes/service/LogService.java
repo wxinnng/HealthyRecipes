@@ -3,6 +3,7 @@ package com.healthyrecipes.service;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
 import com.healthyrecipes.pojo.query.LogQuery;
+import com.healthyrecipes.pojo.vo.LogUserVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface LogService {
 
-    List<LogContent> getLogList(LogQuery logQuery);
+    List<LogUserVO> getLogList(LogQuery logQuery);
 
     void upImages(MultipartFile[] images, Integer userid) ;
 

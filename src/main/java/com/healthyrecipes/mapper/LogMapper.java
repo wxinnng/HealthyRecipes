@@ -3,6 +3,7 @@ package com.healthyrecipes.mapper;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
 import com.healthyrecipes.pojo.query.LogQuery;
+import com.healthyrecipes.pojo.vo.LogUserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface LogMapper {
      * @param logQuery 查询条件
      * @return java.util.List<com.healthyrecipes.pojo.entity.LogContent>
      */
-    List<LogContent> queryLogByPage(LogQuery logQuery);
+    List<LogUserVO> queryLogByPage(LogQuery logQuery);
 
     /**
      * 获取Topic

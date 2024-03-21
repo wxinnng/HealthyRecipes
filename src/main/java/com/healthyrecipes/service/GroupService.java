@@ -1,5 +1,8 @@
 package com.healthyrecipes.service;
 
+import com.github.pagehelper.Page;
+import com.healthyrecipes.pojo.entity.Group;
+import com.healthyrecipes.pojo.query.GroupQuery;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,4 +13,32 @@ import org.springframework.stereotype.Service;
  */
 
 public interface GroupService {
+
+    /**
+     * @description: 创建一个组队
+     * @param: [com.healthyrecipes.pojo.entity.Group]
+     * @return: void
+     */
+    void createGroup(Group group);
+
+    /**
+     * @description: 获得groupList，分页查询
+     * @param: [com.healthyrecipes.pojo.query.GroupQuery]
+     * @return: com.github.pagehelper.Page<com.healthyrecipes.pojo.entity.Group>
+     */
+    Page<Group> getList(GroupQuery query);
+
+    /**
+     * @description: 用户通过code进入小组
+     * @param: [java.lang.Integer, java.lang.String]
+     * @return: void
+     */
+    void joinInGroup(Integer userid, String code);
+
+    /**
+     * @description: ...
+     * @param: [java.lang.Integer, java.lang.Integer]
+     * @return: void
+     */
+    void delete(Integer userid, Integer groupId);
 }

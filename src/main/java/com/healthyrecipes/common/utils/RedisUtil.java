@@ -1,8 +1,7 @@
 package com.healthyrecipes.common.utils;
 
 
-import io.swagger.models.auth.In;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -345,5 +345,15 @@ public class  RedisUtil {
          return redisTemplate.opsForSet().members(key);
     }
 
+    public void setbitmap(String key,long offset,boolean value){
+        redisTemplate.opsForValue().setBit(key,offset,value);
+    }
 
+    public Boolean getbitmap(String key,long index){
+        return redisTemplate.opsForValue().getBit(key,index);
+    }
+
+    public Integer bitcount(String key){
+        return Objects.requireNonNull(redisTemplate.execute((RedisCallback<Long>) con -> con.bitCount(key.getBytes()))).intValue();
+    }
 }

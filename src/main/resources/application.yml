@@ -24,6 +24,10 @@ spring:
       username: healthyrecipes
       password: 48N6bEnph8TarSMM
       max-wait: 3000
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 20MB
 
   mail:
     host: smtp.163.com

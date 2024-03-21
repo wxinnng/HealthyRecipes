@@ -13,8 +13,7 @@
     <update id="updateLog">
         update log
         <trim prefix="set" suffixOverrides=",">
-            <if test="userid != null">userid=#{userid},</if>
-            <if test="topic != null">topic_id = #{topicId},</if>
+            <if test="topicId != null">topic_id = #{topicId},</if>
             <if test="content != null and content !=''">content = #{content},</if>
             <if test="likeNum != null ">like_num = #{likeNum},</if>
             <if test="disLikeNum != null">dis_like_num = #{disLikeNum},</if>
@@ -23,18 +22,24 @@
         where id = #{id}
     </update>
 
-    <select id="queryLogByPage" resultType="com.healthyrecipes.pojo.entity.LogContent">
-        select * from log
+    <select id="queryLogByPage" resultType="com.healthyrecipes.pojo.vo.LogUserVO">
+        select l.id id,l.userid userid,l.topic_id topic_id,l.content content,l.like_num like_num,
+            l.dis_like_num dis_like_num,l.date date,l.images images,
+            u.username username,u.avatar avatar
+        from
+        log l, user u
         <where>
+            l.userid = u.id
             <if test= "id != null and id != ''">
-                id = #{id}
+                and l.id = #{id}
             </if>
             <if test= "userid != null and userid != ''">
-                and userid = #{userid}
+                and l.userid = #{userid}
             </if>
             <if test= "topicId != null and topicId != ''">
-                and topic_id = #{topicId}
+                and l.topic_id = #{topicId}
             </if>
+
         </where>
     </select>
 

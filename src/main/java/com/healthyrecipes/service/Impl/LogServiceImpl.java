@@ -9,6 +9,7 @@ import com.healthyrecipes.mapper.LogMapper;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
 import com.healthyrecipes.pojo.query.LogQuery;
+import com.healthyrecipes.pojo.vo.LogUserVO;
 import com.healthyrecipes.service.LogService;
 import org.apache.logging.log4j.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class LogServiceImpl implements LogService {
     private LogMapper logMapper;
 
     @Override
-    public List<LogContent> getLogList(LogQuery logQuery) {
+    public List<LogUserVO> getLogList(LogQuery logQuery) {
         // 分页查询设置
         PageHelper.startPage(logQuery.getPageNum(), logQuery.getPageSize());
         // 查询并返回数据
@@ -50,7 +51,7 @@ public class LogServiceImpl implements LogService {
 
 
     @Override
-    public void upImages(MultipartFile[] images, Integer userid) {
+    public void upImages(MultipartFile[] images, Integer id) {
 
         //images中的全部内容
         StringBuilder imageBuilder = new StringBuilder();  //拼接好，放到数据库中。
@@ -73,12 +74,11 @@ public class LogServiceImpl implements LogService {
                 throw new BusinessException("图片上传失败！");
             }
 
-            imageBuilder.append(objectName).append("\n");
+            imageBuilder.append("|");
 
             LogContent logContent = new LogContent();
-            logContent.setImages(Arrays.toString(images));
-            logContent.setUserid(userid);
-
+            logContent.setImages(imageBuilder.toString());
+            logContent.setId(id);
             //放入到数据库。
             logMapper.updateLog(logContent);
         }

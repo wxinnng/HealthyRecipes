@@ -43,4 +43,10 @@ public interface MessageConstant {
     String REDIS_LOG_KEY = "log:"; //log:userid:      0:总   1:饮食记录   2:吃多了 (type: list)
 
     String REDIS_CLOCK_IN_KEY = "clock:";  // clock:G_id:U_id:  (type: bitmap)
+
+    Integer INVITATION_CODE_LEN = 7; //邀请码的长度
+
+    Integer GROUP_MEMBER_2 = 2;    //Group中的人数  可以为 2 5 10
+    Integer GROUP_MEMBER_5 = 5;
+    Integer GROUP_MEMBER_10  =10;
 }
