@@ -3,6 +3,7 @@ package com.healthyrecipes.service;
 import com.github.pagehelper.Page;
 import com.healthyrecipes.pojo.entity.Group;
 import com.healthyrecipes.pojo.query.GroupQuery;
+import com.healthyrecipes.pojo.vo.GroupUserVO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,4 +42,11 @@ public interface GroupService {
      * @return: void
      */
     void delete(Integer userid, Integer groupId);
+
+    /**
+     * @description: 获得组队信息详情
+     * @param: [java.lang.Integer]
+     * @return: com.healthyrecipes.pojo.vo.GroupUserVO
+     */
+    GroupUserVO getDetail(Integer id);
 }

@@ -63,4 +63,12 @@
             <if test="isOwner != null">and is_owner = #{isOwner}</if>
         </where>
     </select>
+    <select id="getMemberUserList" resultType="com.healthyrecipes.pojo.dto.UserMemberDTO">
+        select
+        u.id id,u.username username,u.avatar avatar,m.is_owner is_owner
+        from user u,member m
+        where m.group_id = #{id}
+        and
+        u.id = m.user_id
+    </select>
 </mapper>

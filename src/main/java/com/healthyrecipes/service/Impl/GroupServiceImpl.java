@@ -6,9 +6,11 @@ import com.healthyrecipes.common.constant.MessageConstant;
 import com.healthyrecipes.common.utils.RedisUtil;
 import com.healthyrecipes.exception.BusinessException;
 import com.healthyrecipes.mapper.GroupMapper;
+import com.healthyrecipes.pojo.dto.UserMemberDTO;
 import com.healthyrecipes.pojo.entity.Group;
 import com.healthyrecipes.pojo.entity.Member;
 import com.healthyrecipes.pojo.query.GroupQuery;
+import com.healthyrecipes.pojo.vo.GroupUserVO;
 import com.healthyrecipes.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,31 @@ public class GroupServiceImpl implements GroupService {
         if( query.getPageNum() != null && query.getPageSize() != null)
             PageHelper.startPage(query.getPageNum(), query.getPageSize());
         return groupMapper.getGroupList(query);
+    }
+
+    @Override
+    public GroupUserVO getDetail(Integer id) {
+        GroupQuery query = new GroupQuery();
+        query.setId(id);
+
+        GroupUserVO result = new GroupUserVO();
+
+        /*1.获得group信息*/
+        Group group = groupMapper.getGroupList(query).get(0);
+        result.setGroupName(group.getGroupName());
+        result.setGroupSize(group.getGroupSize());
+        result.setIntroduce(group.getIntroduce());
+        result.setCodeInfo(group.getCodeInfo());
+        result.setCurNum(group.getCurNum());
+        result.setId(id);
+        result.setOwnerId(group.getOwnerId());
+        result.setCreateTime(group.getCreateTime());
+
+        /*2.获得Member中的成员信息*/
+        List<UserMemberDTO> userMemberDTOList = groupMapper.getMemberUserList(id);
+        result.setMembers(userMemberDTOList);
+
+        return result;
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package com.healthyrecipes.mapper;
 
 import com.github.pagehelper.Page;
+import com.healthyrecipes.pojo.dto.UserMemberDTO;
 import com.healthyrecipes.pojo.entity.Group;
 import com.healthyrecipes.pojo.entity.Member;
 import com.healthyrecipes.pojo.query.GroupQuery;
@@ -108,4 +109,11 @@ public interface GroupMapper {
      */
     @Select("select user_id from member where group_id = #{groupId}")
     List<Integer> getMemberIds(Integer groupId);
+
+    /**
+     * @description: 获得Member和User中组合数据
+     * @param: [java.lang.Integer]
+     * @return: java.util.List<com.healthyrecipes.pojo.dto.UserMemberDTO>
+     */
+    List<UserMemberDTO> getMemberUserList(Integer id);
 }

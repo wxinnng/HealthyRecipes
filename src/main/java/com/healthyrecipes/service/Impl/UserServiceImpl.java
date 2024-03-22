@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
         //发送信息
         SparkRequest sparkRequest = SparkRequest.builder()
                 .messages(messages)
-                .maxTokens(1024)     //回答的最大token
+                .maxTokens(5)        //回答的最大token
                 .temperature(0.5)    //结果随机性
                 .apiVersion(SparkApiVersion.V3_5)   //版本情况
                 .build();   //构建

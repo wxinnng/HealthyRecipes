@@ -11,9 +11,8 @@ import io.github.briqt.spark4j.model.response.SparkResponseUsage;
 import io.github.briqt.spark4j.model.response.SparkTextUsage;
 import okhttp3.WebSocket;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,7 +51,6 @@ public class SparkConsoleListener extends SparkBaseListener {
         }
 
         try {
-
             session.getBasicRemote().sendText(content);  //将socket的信息返回给前端
         } catch(IOException e){
             System.err.println(e.getMessage());
@@ -62,6 +60,12 @@ public class SparkConsoleListener extends SparkBaseListener {
             System.out.println("\n回答结束；提问tokens：" + textUsage.getPromptTokens()
                     + "，回答tokens：" + textUsage.getCompletionTokens()
                     + "，总消耗tokens：" + textUsage.getTotalTokens());
+            try {
+                //结束的时候发个 |
+                session.getBasicRemote().sendText("|");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

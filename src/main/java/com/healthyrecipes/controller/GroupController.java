@@ -5,6 +5,7 @@ import com.healthyrecipes.common.result.ResultJson;
 import com.healthyrecipes.exception.BusinessException;
 import com.healthyrecipes.pojo.entity.Group;
 import com.healthyrecipes.pojo.query.GroupQuery;
+import com.healthyrecipes.pojo.vo.GroupUserVO;
 import com.healthyrecipes.service.GroupService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,6 +66,22 @@ public class GroupController {
         }
     }
 
+    /**
+     * @description: 获得一个组队的详情
+     * @param: [java.lang.Integer]
+     * @return: com.healthyrecipes.common.result.ResultJson<com.healthyrecipes.pojo.vo.GroupUserVO>
+     */
+    @GetMapping("/groupdetail/{id}")
+    @ApiOperation("获得组队的详细信息")
+    public ResultJson<GroupUserVO> getDetail(@PathVariable Integer id){
+        log.info("获得组队的详细信息");
+        try{
+            return ResultJson.success(groupService.getDetail(id));
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+            return ResultJson.error("服务器异常！");
+        }
+    }
 
     /**
      * @description: 通过邀请码，进入组队
