@@ -29,6 +29,7 @@ import java.util.UUID;
  * @VERSION:1.0
  */
 @Service
+@Slf4j
 public class LogServiceImpl implements LogService {
 
 
@@ -43,8 +44,9 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public List<LogUserVO> getLogList(LogQuery logQuery) {
-        // 分页查询设置
-        PageHelper.startPage(logQuery.getPageNum(), logQuery.getPageSize());
+        if(logQuery.getPageNum() != null && logQuery.getPageSize() != null){
+            PageHelper.startPage(logQuery.getPageNum(), logQuery.getPageSize());
+        }
         // 查询并返回数据
         return logMapper.queryLogByPage(logQuery);
     }
@@ -117,5 +119,57 @@ public class LogServiceImpl implements LogService {
     @Override
     public List<Object> getRecords(Integer userid) {
         return redisUtil.lrange(MessageConstant.REDIS_LOG_KEY + userid, 0, -1);
+    }
+
+    
+    @Override
+    public ResultJson<String> addLogComment(LogComment logComment) {
+        // 查看userId, LogId是否存在于数据库中
+        if(!checkUserId(logComment.getUserId()) || !checkLogId(logComment.getLogId())){
+            log.warn("userId或logId不存在于数据库中:{}", logComment);
+            return ResultJson.error("用户或话题不存在");
+        }
+
+        // 如果有parentCommentId, 进行检查
+        if (logComment.getParentCommentId() != null
+                && checkParentCommentId(logComment.getParentCommentId())){
+            log.warn("parentCommentId不存在于数据库中:{}", logComment);
+            return ResultJson.error("评论不存在");
+        }
+
+        logMapper.insertLogComment(logComment);
+        return ResultJson.success("发布评论成功");
+    }
+
+    /**
+     * 用于查询饮食圈在数据库中是否存在且有效
+     * @param logId 饮食记录id
+     * @return true表示存在且有效
+     */
+    private boolean checkLogId(Integer logId){
+        return logMapper.checkLogId(logId);
+    }
+
+    /**
+     * 用于查询饮食圈在数据库中是否存在且有效
+     * @param userId 用户Id
+     * @return true表示存在且有效
+     */
+    private boolean checkUserId(Integer userId){
+        return logMapper.checkUserId(userId);
+    }
+
+    /**
+     * 用于查询父评论在数据库中是否存在且有效
+     * @param parentCommentId 父评论Id
+     * @return true表示存在且有效
+     */
+    private boolean checkParentCommentId(Integer parentCommentId){
+        return logMapper.checkParentCommentId(parentCommentId);
+    }
+
+    @Override
+    public ResultJson<LogDTO> getLogDetails(Integer id) {
+        return ResultJson.success(logMapper.getLogWithUserInfoById(id));
     }
 }
