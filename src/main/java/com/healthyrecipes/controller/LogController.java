@@ -128,4 +128,45 @@ public class LogController extends ABaseController {
             return ResultJson.error("服务器异常!");
         }
     }
+    
+    /**
+     *  对饮食记录发表评论
+     * @param logComment 评论属性
+     * @return 成功则在data中返回成功信息, 失败会根据情况返回对应错误信息
+     */
+    @RequestMapping("/postComment")
+    public ResultJson<String> addLogComment(@RequestBody LogComment logComment){
+        log.info("对饮食记录发表评论:{}", logComment);
+
+        try {
+
+            if(logComment.getLogId() == null || logComment.getLogId() <= 0
+                    || logComment.getUserId() == null || logComment.getUserId() <= 0
+                    || (logComment.getParentCommentId() != null && logComment.getParentCommentId() <= 0)){
+                log.warn("id异常:{}", logComment);
+                return ResultJson.error("id异常");
+            }
+
+            if (!StringUtils.hasLength(logComment.getContent())){
+                log.warn("评论内容为空:{}", logComment);
+                return ResultJson.error("评论内容不能为空");
+            }
+
+            return logService.addLogComment(logComment);
+
+        }catch (Exception e){
+            log.error("{}",e.getMessage());
+            return ResultJson.error("内部发生异常");
+        }
+    }
+
+    @RequestMapping("/getLog")
+    public ResultJson<LogDTO> getLogDetails(Integer id){
+        if(id == null || id <= 0){
+            log.warn("id异常:{}", id);
+            return ResultJson.error("id异常");
+        }
+
+        return logService.getLogDetails(id);
+    }
 }
