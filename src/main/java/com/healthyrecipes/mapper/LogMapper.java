@@ -42,4 +42,15 @@ public interface LogMapper {
      * @return: void
      */
     void updateLog(LogContent logContent);
+
+    
+    void insertLogComment(LogComment logComment);
+
+    boolean checkLogId(Integer userId);
+
+    boolean checkUserId(Integer userId);
+
+    boolean checkParentCommentId(Integer parentCommentId);
+
+    LogDTO getLogWithUserInfoById(Integer logId);
 }
