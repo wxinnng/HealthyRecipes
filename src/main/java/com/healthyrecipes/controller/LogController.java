@@ -3,6 +3,8 @@ package com.healthyrecipes.controller;
 import com.healthyrecipes.common.result.ResultJson;
 import com.healthyrecipes.common.utils.AliOssUtil;
 import com.healthyrecipes.exception.BusinessException;
+import com.healthyrecipes.pojo.dto.LogDTO;
+import com.healthyrecipes.pojo.entity.LogComment;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
 import com.healthyrecipes.pojo.query.LogQuery;
@@ -13,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
