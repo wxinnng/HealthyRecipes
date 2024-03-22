@@ -1,5 +1,8 @@
 package com.healthyrecipes.service;
 
+import com.healthyrecipes.common.result.ResultJson;
+import com.healthyrecipes.pojo.dto.LogDTO;
+import com.healthyrecipes.pojo.entity.LogComment;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
 import com.healthyrecipes.pojo.query.LogQuery;
@@ -25,4 +28,9 @@ public interface LogService {
     Integer insertALog(LogContent logContent);
 
     List<Object> getRecords(Integer userid);
+
+    
+    ResultJson<String> addLogComment(LogComment logComment);
+
+    ResultJson<LogDTO> getLogDetails(Integer id);
 }
