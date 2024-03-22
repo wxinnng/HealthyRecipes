@@ -1,10 +1,12 @@
 package com.healthyrecipes.service;
 
 import com.healthyrecipes.common.result.ResultJson;
+import com.healthyrecipes.pojo.dto.LogCommentDTO;
 import com.healthyrecipes.pojo.dto.LogDTO;
 import com.healthyrecipes.pojo.entity.LogComment;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
+import com.healthyrecipes.pojo.query.LogCommentQuery;
 import com.healthyrecipes.pojo.query.LogQuery;
 import com.healthyrecipes.pojo.vo.LogUserVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +35,6 @@ public interface LogService {
     ResultJson<String> addLogComment(LogComment logComment);
 
     ResultJson<LogDTO> getLogDetails(Integer id);
+
+    ResultJson<LogCommentDTO> getLogComments(LogCommentQuery logCommentQuery);
 }

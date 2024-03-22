@@ -7,10 +7,12 @@ import com.healthyrecipes.common.utils.AliOssUtil;
 import com.healthyrecipes.common.utils.RedisUtil;
 import com.healthyrecipes.exception.BusinessException;
 import com.healthyrecipes.mapper.LogMapper;
+import com.healthyrecipes.pojo.dto.LogCommentDTO;
 import com.healthyrecipes.pojo.dto.LogDTO;
 import com.healthyrecipes.pojo.entity.LogComment;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
+import com.healthyrecipes.pojo.query.LogCommentQuery;
 import com.healthyrecipes.pojo.query.LogQuery;
 import com.healthyrecipes.pojo.vo.LogUserVO;
 import com.healthyrecipes.service.LogService;
@@ -175,5 +177,30 @@ public class LogServiceImpl implements LogService {
     @Override
     public ResultJson<LogDTO> getLogDetails(Integer id) {
         return ResultJson.success(logMapper.getLogWithUserInfoById(id));
+    }
+
+    @Override
+    public ResultJson<LogCommentDTO> getLogComments(LogCommentQuery logCommentQuery) {
+        // 创建返回值
+        LogCommentDTO logCommentDTO = new LogCommentDTO();
+
+        // 如果没有提供父评论id, 那么就是要提供dislikeNum和likeNum
+        if(logCommentQuery.getParentCommentId() == null){
+            // 根据id找到log, 放入dislikeNum和likeNum
+            LogQuery logQuery = new LogQuery();
+            logQuery.setId(logCommentQuery.getLogId());
+            List<LogUserVO> logList = getLogList(logQuery);
+            logCommentDTO.setLikeNum(logList.get(0).getLikeNum());
+            logCommentDTO.setDislikeNum(logList.get(0).getDisLikeNum());
+        }
+
+
+        // 查找数据, 会根据parentCommentsId是否提供来判断查询的是父评论还是子评论
+        List<LogCommentDTO.Comment> logComments = logMapper.queryTopLevelComments(logCommentQuery);
+
+        // 将查找到的评论数据放入返回值
+        logCommentDTO.setLogComments(logComments);
+
+        return ResultJson.success(logCommentDTO);
     }
 }

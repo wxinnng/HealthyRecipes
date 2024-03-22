@@ -1,9 +1,11 @@
 package com.healthyrecipes.mapper;
 
+import com.healthyrecipes.pojo.dto.LogCommentDTO;
 import com.healthyrecipes.pojo.dto.LogDTO;
 import com.healthyrecipes.pojo.entity.LogComment;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
+import com.healthyrecipes.pojo.query.LogCommentQuery;
 import com.healthyrecipes.pojo.query.LogQuery;
 import com.healthyrecipes.pojo.vo.LogUserVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -55,4 +57,8 @@ public interface LogMapper {
     boolean checkParentCommentId(Integer parentCommentId);
 
     LogDTO getLogWithUserInfoById(Integer logId);
+
+    void operateForLike(Integer commentId, int operator);
+
+    List<LogCommentDTO.Comment> queryTopLevelComments(LogCommentQuery logCommentQuery);
 }

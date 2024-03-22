@@ -35,6 +35,19 @@
         </trim>
         where id = #{id}
     </update>
+    <update id="operateForLike">
+        update diet_log_comments
+        set `likes` = `likes`
+        <choose>
+            <when test="operator == 1">
+                + 1
+            </when>
+            <otherwise>
+                - 1
+            </otherwise>
+        </choose>
+        where id = #{commentId}
+    </update>
 
     <select id="queryLogByPage" resultType="com.healthyrecipes.pojo.vo.LogUserVO">
         select l.id id,l.userid userid,l.topic_id topic_id,l.content content,l.like_num like_num,
@@ -112,12 +125,34 @@
         SELECT avatar FROM user WHERE id = #{userId}
     </select>
 
-    <select id="getLogWithUserInfoById" resultType="com.healthyrecipes.pojo.dto.LogDTO">
-        SELECT l.user_id, l.log_content, l.log_images, u.username, u.avatar
+    <resultMap id="logDetailMap" type="com.healthyrecipes.pojo.dto.LogDTO">
+        <result column="content" property="logContent"></result>
+        <result column="images" property="logImages"></result>
+    </resultMap>
+
+    <select id="getLogWithUserInfoById" resultType="com.healthyrecipes.pojo.dto.LogDTO" resultMap="logDetailMap">
+        SELECT l.userid, l.content, l.images, u.username, u.avatar
         FROM log l
         LEFT JOIN user u ON l.userid = u.id
         WHERE l.id = #{logId}
     </select>
 
+    <select id="queryTopLevelComments" resultType="com.healthyrecipes.pojo.dto.LogCommentDTO$Comment">
+        SELECT dlc.user_id AS 'userId',
+        u.username,
+        u.avatar,
+        dlc.content,
+        dlc.likes
+        FROM diet_log_comments dlc
+        INNER JOIN user u ON dlc.user_id = u.id
+        WHERE dlc.log_id = #{logId} AND dlc.status = 1 AND
+        <if test="parentCommentId != null">
+            dlc.parent_comment_id = #{parentCommentId}
+        </if>
+        <if test="parentCommentId == null">
+            dlc.parent_comment_id = 0
+        </if>
+
+    </select>
 
 </mapper>

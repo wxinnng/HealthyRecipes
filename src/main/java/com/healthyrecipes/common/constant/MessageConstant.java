@@ -46,7 +46,7 @@ public interface MessageConstant {
 
     Integer INVITATION_CODE_LEN = 7; //邀请码的长度
 
-    Integer GROUP_MEMBER_2 = 2;    //Group中的人数  可以为 2 5 10
-    Integer GROUP_MEMBER_5 = 5;
-    Integer GROUP_MEMBER_10  =10;
+    Integer COMMENT_TYPE_DISH = 1;  //评论是dish
+    Integer COMMENT_TYPE_LOG = 2;   //评论是LOg
+
 }

@@ -119,7 +119,7 @@ public interface UserService {
      * @param: []
      * @return: void
      */
-    void doLike(Integer userId,Integer commentId);
+    void doLike(Integer userId,Integer commentId,Integer type);
 
     /**
      * @description: 通过email获得用户的信息

@@ -256,7 +256,6 @@ public class UserController {
         try{
             Integer commentId = userService.addAComment(comment);
             log.info("{}",commentId);
-            redisUtil.sadd(MessageConstant.COMMENT_KEY+":"+commentId,-1);
             return ResultJson.success("评论成功");
         }catch(Exception e){
             System.err.println(e.getMessage());
@@ -324,22 +323,21 @@ public class UserController {
     public ResultJson<String> doLike(@RequestParam Integer userid,@RequestParam Integer commentId) {
         log.info("点赞 {} -> {}", userid, commentId);
         //在发表评论的时候，关于评论的点赞集合就已经创建了
-        userService.doLike(userid,commentId);
+        userService.doLike(userid,commentId,MessageConstant.COMMENT_TYPE_DISH);
         return ResultJson.success("操作成功！");
     }
 
 
     /**
-     * 找回密码时，点击获取验证码
-     * @param email
-     * @return
-     * @throws Exception
+     * @description: 找回密码
+     * @param: [java.lang.String, java.lang.String, java.lang.String]
+     * @return: com.healthyrecipes.common.result.ResultJson<java.lang.String>
      */
     @GetMapping("/findBack")
     @ApiOperation("找回密码")
     public ResultJson<String> findBack(@RequestParam String email ,
                                        @RequestParam String password ,
-                                       @RequestParam String code){
+                                       @RequestParam String code) {
         //通过邮箱查询用户
         User user = userService.getUserMessageByEmail(email);
 
@@ -348,7 +346,7 @@ public class UserController {
 
         //将修改后的密码进行Md5加密
         String password2 = DigestUtils.md5DigestAsHex(password.getBytes());
-        log.info("注册: 用户提交的密码（加密后） {}",password);
+        log.info("注册: 用户提交的密码（加密后） {}", password);
 
         //修改获取的用户密码
         user.setPassword(password2);
@@ -357,7 +355,4 @@ public class UserController {
 
         return ResultJson.success("修改成功");
     }
-
-
-
 }

@@ -1,15 +1,19 @@
 package com.healthyrecipes.controller;
 
+import com.healthyrecipes.common.constant.MessageConstant;
 import com.healthyrecipes.common.result.ResultJson;
 import com.healthyrecipes.common.utils.AliOssUtil;
 import com.healthyrecipes.exception.BusinessException;
+import com.healthyrecipes.pojo.dto.LogCommentDTO;
 import com.healthyrecipes.pojo.dto.LogDTO;
 import com.healthyrecipes.pojo.entity.LogComment;
 import com.healthyrecipes.pojo.entity.LogContent;
 import com.healthyrecipes.pojo.entity.Topic;
+import com.healthyrecipes.pojo.query.LogCommentQuery;
 import com.healthyrecipes.pojo.query.LogQuery;
 import com.healthyrecipes.pojo.vo.LogUserVO;
 import com.healthyrecipes.service.LogService;
+import com.healthyrecipes.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,6 +41,9 @@ public class LogController extends ABaseController {
 
     @Autowired
     private LogService logService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * @description: 接收图片以外的内容
@@ -137,7 +144,8 @@ public class LogController extends ABaseController {
      * @param logComment 评论属性
      * @return 成功则在data中返回成功信息, 失败会根据情况返回对应错误信息
      */
-    @RequestMapping("/postComment")
+    @PostMapping("/postComment")
+    @ApiOperation("发表评论")
     public ResultJson<String> addLogComment(@RequestBody LogComment logComment){
         log.info("对饮食记录发表评论:{}", logComment);
 
@@ -163,13 +171,49 @@ public class LogController extends ABaseController {
         }
     }
 
-    @RequestMapping("/getLog")
-    public ResultJson<LogDTO> getLogDetails(Integer id){
+    /**
+     * @description: 获得log详情
+     * @param: [java.lang.Integer]
+     * @return: com.healthyrecipes.common.result.ResultJson<com.healthyrecipes.pojo.dto.LogDTO>
+     */
+    @GetMapping("/getLog")
+    @ApiOperation("获得log详情")
+    public ResultJson<LogDTO> getLogDetails(@RequestParam Integer id){
         if(id == null || id <= 0){
             log.warn("id异常:{}", id);
             return ResultJson.error("id异常");
         }
-
         return logService.getLogDetails(id);
     }
+
+    /**
+     * @description: 点赞或者取消点赞
+     * @param: [java.lang.Integer, java.lang.Integer]
+     * @return: com.healthyrecipes.common.result.ResultJson<java.lang.String>
+     */
+    @GetMapping("/dolike")
+    @ApiOperation("点赞或者取消点赞")
+    public ResultJson<String> doLike(@RequestParam Integer userid,@RequestParam Integer logCommentId){
+        log.info("点赞 {} -> {}",userid,logCommentId);
+        try{
+            userService.doLike(userid,logCommentId, MessageConstant.COMMENT_TYPE_LOG);
+            return ResultJson.success("操作成功！");
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            return ResultJson.error("服务器异常！");
+        }
+    }
+
+    @GetMapping("/getComment")
+    public ResultJson<LogCommentDTO> getLogComments(LogCommentQuery logCommentQuery){
+        try{
+
+            return logService.getLogComments(logCommentQuery);
+        }catch (Exception e){
+            log.error("发生异常:{}", logCommentQuery);
+            return ResultJson.error("内部发生异常");
+        }
+    }
+
+
 }

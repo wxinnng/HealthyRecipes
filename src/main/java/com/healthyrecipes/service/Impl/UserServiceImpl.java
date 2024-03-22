@@ -4,6 +4,7 @@ import com.healthyrecipes.common.constant.MessageConstant;
 import com.healthyrecipes.common.utils.RedisUtil;
 import com.healthyrecipes.exception.NoSuchCommentException;
 import com.healthyrecipes.mapper.AdminMapper;
+import com.healthyrecipes.mapper.LogMapper;
 import com.healthyrecipes.mapper.UserMapper;
 import com.healthyrecipes.pojo.dto.CommentDTO;
 import com.healthyrecipes.pojo.dto.UserDTO;
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LogMapper logMapper;
 
     @Resource
     private SparkConsoleListener sparkConsoleListener;
@@ -204,7 +208,7 @@ public class UserServiceImpl implements UserService {
         //发送信息
         SparkRequest sparkRequest = SparkRequest.builder()
                 .messages(messages)
-                .maxTokens(5)        //回答的最大token
+                .maxTokens(1024)        //回答的最大token
                 .temperature(0.5)    //结果随机性
                 .apiVersion(SparkApiVersion.V3_5)   //版本情况
                 .build();   //构建
@@ -217,18 +221,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void doLike(Integer userId,Integer commentId) {
-        if(redisUtil.sismember(MessageConstant.COMMENT_KEY+":"+commentId,userId)){
+    public void doLike(Integer userId,Integer commentId,Integer type) {
+
+        //comment:type:commentId 是一个集合里面放的是给改评论点赞了的id
+        //user_comment:type:userID 是一个集合里面放的是用户点赞了的评论列表
+        if(redisUtil.sismember(MessageConstant.COMMENT_KEY+":"+type+":"+commentId,userId)){ //用户进行了点赞
             //redis中存在，就直接删除
-            redisUtil.srem(MessageConstant.COMMENT_KEY+":"+commentId,userId);
-            redisUtil.srem(MessageConstant.USER_COMMENT_KEY+":"+userId,commentId);
-            //更新mysql中评论点赞的数量
-            userMapper.operateForLike(commentId,0);  //null是键操作
+            redisUtil.srem(MessageConstant.COMMENT_KEY+":"+type+":"+commentId,userId);
+            redisUtil.srem(MessageConstant.USER_COMMENT_KEY+":"+type+":"+userId,commentId);
+
+            //1 dish_comment    2 log_comment
+            if(type == 1){
+                //更新mysql中评论点赞的数量
+                userMapper.operateForLike(commentId,0);  //0 是减法操作
+            }else{
+                logMapper.operateForLike(commentId,0);    //减法操作
+            }
         }else {
             //redis中不存在就直接添加
-            redisUtil.sadd(MessageConstant.COMMENT_KEY+":"+commentId,userId);
-            redisUtil.sadd(MessageConstant.USER_COMMENT_KEY+":"+userId,commentId);
-            userMapper.operateForLike(commentId,1);  //1是加操作
+            redisUtil.sadd(MessageConstant.COMMENT_KEY+":"+type+":"+commentId,userId);
+            redisUtil.sadd(MessageConstant.USER_COMMENT_KEY+":"+type+":"+userId,commentId);
+
+            if(type == 1){
+                userMapper.operateForLike(commentId,1);  //1是加操作
+            } else {
+                logMapper.operateForLike(commentId,1) ; //1是加法操作
+            }
         }
     }
 
