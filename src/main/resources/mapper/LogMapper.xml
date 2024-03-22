@@ -10,6 +10,20 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
+    <insert id="insertLogComment">
+        insert into diet_log_comments
+        (user_id, log_id, content
+        <if test="parentCommentId != null">
+            , parent_comment_id
+        </if>
+        )
+        values
+        (#{userId}, #{logId}, #{content}
+        <if test="parentCommentId != null">
+            , #{parentCommentId}
+        </if>
+        )
+    </insert>
     <update id="updateLog">
         update log
         <trim prefix="set" suffixOverrides=",">
@@ -54,5 +68,56 @@
         </if>
         status = 1
     </select>
+     <select id="checkLogId" resultType="java.lang.Boolean">
+        select exists (
+        select 1
+        from log
+        where id = #{logId}
+        )
+    </select>
+
+    <select id="checkUserId" resultType="java.lang.Boolean">
+        select exists (
+        select 1
+        from user
+        where id = #{userId} and status = 1
+        )
+    </select>
+
+    <select id="checkParentCommentId" resultType="java.lang.Boolean">
+        select exists (
+        select 1
+        from user
+        where id = #{parentCommentId} and status = 1
+        )
+    </select>
+
+    <!-- 定义 resultMap -->
+    <resultMap id="logDtoResultMap" type="com.healthyrecipes.pojo.dto.LogDTO">
+        <id property="userId" column="user_id"/>
+        <result property="logContent" column="log_content"/>
+        <result property="logImages" column="log_images"/>
+
+        <!-- 引用外部 resultMap，处理 user 表中的信息 -->
+        <association property="username" javaType="String" column="user_id" select="getUserByUsername"/>
+        <association property="avatar" javaType="String" column="user_id" select="getUserAvatar"/>
+    </resultMap>
+
+    <!-- 获取用户名称的方法 -->
+    <select id="getUserByUsername" resultType="String">
+        SELECT username FROM user WHERE id = #{userId}
+    </select>
+
+    <select id="getUserAvatar" resultType="String">
+        SELECT avatar FROM user WHERE id = #{userId}
+    </select>
+
+    <select id="getLogWithUserInfoById" resultType="com.healthyrecipes.pojo.dto.LogDTO">
+        SELECT l.user_id, l.log_content, l.log_images, u.username, u.avatar
+        FROM log l
+        LEFT JOIN user u ON l.userid = u.id
+        WHERE l.id = #{logId}
+    </select>
+
 
 </mapper>
