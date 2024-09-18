@@ -1,6 +1,6 @@
 server:
   port: 8080
-  host: 123.57.175.4
+  host: 
 
 mybatis:
 
@@ -23,7 +23,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://${server.host}/healthyrecipes?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: healthyrecipes
-      password: 48N6bEnph8TarSMM
+      password: 
       max-wait: 3000
   servlet:
     multipart:
@@ -32,8 +32,8 @@ spring:
 
   mail:
     host: smtp.163.com
-    username: 19846811030@163.com
-    password: SWSERLCPKUGVTZDB
+    username: 
+    password: 
     default-encoding: utf-8
     port: 465
     protocol: smtp
@@ -79,22 +79,22 @@ project:
     token-name: token
 
   alioss:
-    endpoint: oss-cn-beijing.aliyuncs.com
-    access-key-id: LTAI5t7AjABT97keTzQkNtyP
-    access-key-secret: KVzCRkdADCoINhLkNsnUyk8EmkKvZ6
+    endpoint: 
+    access-key-id: 
+    access-key-secret: 
     bucket-name: healthy-bucket
   bailian:
-    ak: LTAI5tHvA7yEtg6Tn4VurnAs
-    sk: criOqwvkmplHpoRucPASoQQvOpyOit
-    app-id:  b068c17e55d44c97bbc00d594e1dad07
-    agent_id: 002db9335fd94b1793d15653d9f7dc0b_p_efm
+    ak: 
+    sk: 
+    app-id: 
+    agent_id: 
   baidu:
     app-id : 48298377
-    ak : 4jl2mGGFLmkLeDP76eyrNYZr
-    sk : cO6T4ASjRtrmyuRaxhjWukqDhIFjpcVS
+    ak :
+    sk :
 # 讯飞星火配置
 xunfei:
   client:
     appid: eb1e3c7a
-    apiSecret: NWY0MWUxOTBiZWRmYmNlNGQ4MmFlNzQw
-    apiKey: 333fe5b7e1de7c7f2f8fe01ca362b8c4
+    apiSecret: 
+    apiKey: 
